@@ -1,0 +1,236 @@
+import React, { useState, useEffect } from "react";
+import Navbar from "../components/Navbar";
+import TaskList from "../components/TaskList";
+import Modal from "../components/Modal";
+import useAuthContext from "../hooks/UseAuthContext";
+import axios from "axios";
+
+const Tasks = () => {
+  const { user } = useAuthContext();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState("add");
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [tasks, setTasks] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!user || !user.token) return;
+    const fetchTasks = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("http://localhost:5555/api/tasks", {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+        setTasks(response.data.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTasks();
+  }, [user]);
+
+  const openAddModal = () => {
+    setModalMode("add");
+    setSelectedTask(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (task) => {
+    setModalMode("edit");
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
+
+  const openDeleteModal = (task) => {
+    setModalMode("delete");
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const onToggleComplete = async (id) => {
+    const task = tasks.find((t) => t._id === id);
+    if (!task) return;
+
+    try {
+      const res = await axios.put(
+        `http://localhost:5555/api/tasks/complete/${id}`,{},
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      setTasks((prev) => prev.map((t) => (t._id === id ? res.data.data : t)));
+    } catch (error) {
+      console.error("Toggle Complete Error:", error);
+    }
+  };
+
+  return (
+    <div>
+      <Modal
+        isOpen={isModalOpen}
+        title={
+          modalMode === "add"
+            ? "Add New Task"
+            : modalMode === "edit"
+            ? "Edit Task"
+            : "Delete Task?"
+        }
+        onClose={closeModal}
+      >
+        {modalMode === "delete" ? (
+          <div>
+            <p>Are you sure you want to delete this task?</p>
+            <div className="mt-4 flex justify-end gap-3">
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 text-sm rounded bg-gray-200 hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  try {
+                    await axios.delete(
+                      `http://localhost:5555/api/tasks/${selectedTask._id}`,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${user.token}`,
+                        },
+                      }
+                    );
+
+                    setTasks((prev) =>
+                      prev.filter((task) => task._id !== selectedTask._id)
+                    );
+                    closeModal();
+                  } catch (error) {
+                    console.error("Delete Task Error:", error);
+                  }
+                }}
+                className="px-4 py-2 text-sm rounded bg-red-500 text-white hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ) : (
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const form = e.target;
+              const title = form.title.value;
+              const deadline = form.deadline.value;
+
+              if (modalMode === "add") {
+                const newTask = {
+                  title,
+                  deadline
+                };
+
+                try {
+                  const res = await axios.post(
+                    "http://localhost:5555/api/tasks",
+                    newTask,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${user.token}`,
+                      },
+                    }
+                  );
+                  setTasks((prev) => [...prev, res.data]);
+                } catch (error) {
+                  console.error("Add Task Error:", error);
+                }
+              } else if (modalMode === "edit") {
+                const updatedTask = {
+                  title,
+                  deadline
+                };
+
+                try {
+                  const res = await axios.put(
+                    `http://localhost:5555/api/tasks/${selectedTask._id}`,
+                    updatedTask,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${user.token}`,
+                      },
+                    }
+                  );
+                  setTasks((prev) =>
+                    prev.map((task) =>
+                      task._id === selectedTask._id ? res.data.data : task
+                    )
+                  );
+                } catch (error) {
+                  console.error("Edit Task Error:", error);
+                }
+              }
+              closeModal();
+            }}
+          >
+            <div className="space-y-4">
+              <input
+                name="title"
+                defaultValue={selectedTask?.title || ""}
+                placeholder="Title"
+                required
+                className="w-full border p-2 rounded"
+              />
+              <input
+                name="deadline"
+                type="date"
+                defaultValue={selectedTask?.deadline?.split("T")[0] || ""}
+                required
+                className="w-full border p-2 rounded"
+              />
+            </div>
+            <div className="flex justify-end mt-4">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                {modalMode === "add" ? "Add Task" : "Update Task"}
+              </button>
+            </div>
+          </form>
+        )}
+      </Modal>
+
+      {user && <Navbar />}
+
+      <div className="flex justify-between items-center px-4 py-4">
+        <h2 className="text-2xl font-semibold text-gray-800">My Tasks</h2>
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow transition"
+          onClick={openAddModal}
+        >
+          + Add Task
+        </button>
+      </div>
+
+      {loading ? (
+        <p className="text-center text-gray-500 mt-4">Loading tasks...</p>
+      ) : (
+        <TaskList
+          tasks={tasks || []}
+          onToggleComplete={onToggleComplete}
+          onDelete={openDeleteModal}
+          onEdit={openEditModal}
+        />
+      )}
+    </div>
+  );
+};
+
+export default Tasks;

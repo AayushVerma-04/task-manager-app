@@ -14,7 +14,7 @@ const addTask = async (request, response) => {
 
   const newTask = new Task({
     title,
-    deadline,
+    deadline : new Date(deadline),
     user: user_id
   });
 
@@ -93,10 +93,10 @@ const markTaskCompleted = async (request, response) => {
       return response.status(404).json({ message: "Task not found" });
     }
 
-    task.completed = true;
+    task.completed = !task.completed;
     await task.save();
 
-    response.status(200).json({ message: "Task marked as completed", task });
+    response.status(200).json({ message: "Task marked as completed", data: task });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }

@@ -14,7 +14,7 @@ const mongodbURL = process.env.mongodbURL;
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/task", taskRouter);
+app.use("/api/tasks", taskRouter);
 app.use("/api/user", userRouter);
 
 mongoose
