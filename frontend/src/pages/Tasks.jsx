@@ -13,24 +13,37 @@ const Tasks = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [tasks, setTasks] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); // ✅ error state
 
   useEffect(() => {
     if (!user || !user.token) return;
+
     const fetchTasks = async () => {
       try {
         setLoading(true);
+        setError(null);
         const response = await axios.get("http://localhost:5555/api/tasks", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setTasks(response.data.data);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load tasks.");
       } finally {
         setLoading(false);
       }
     };
+
     fetchTasks();
   }, [user]);
+
+  // Auto-clear error after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timeout = setTimeout(() => setError(null), 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [error]);
 
   const openAddModal = () => {
     setModalMode("add");
@@ -60,7 +73,8 @@ const Tasks = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:5555/api/tasks/complete/${id}`,{},
+        `http://localhost:5555/api/tasks/complete/${id}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -69,8 +83,10 @@ const Tasks = () => {
       );
 
       setTasks((prev) => prev.map((t) => (t._id === id ? res.data.data : t)));
-    } catch (error) {
-      console.error("Toggle Complete Error:", error);
+      setError(null);
+    } catch (err) {
+      console.error("Toggle Complete Error:", err);
+      setError("Failed to update task status.");
     }
   };
 
@@ -108,13 +124,14 @@ const Tasks = () => {
                         },
                       }
                     );
-
                     setTasks((prev) =>
                       prev.filter((task) => task._id !== selectedTask._id)
                     );
                     closeModal();
-                  } catch (error) {
-                    console.error("Delete Task Error:", error);
+                    setError(null);
+                  } catch (err) {
+                    console.error("Delete Task Error:", err);
+                    setError("Failed to delete task.");
                   }
                 }}
                 className="px-4 py-2 text-sm rounded bg-red-500 text-white hover:bg-red-600"
@@ -132,10 +149,7 @@ const Tasks = () => {
               const deadline = form.deadline.value;
 
               if (modalMode === "add") {
-                const newTask = {
-                  title,
-                  deadline
-                };
+                const newTask = { title, deadline };
 
                 try {
                   const res = await axios.post(
@@ -148,14 +162,13 @@ const Tasks = () => {
                     }
                   );
                   setTasks((prev) => [...prev, res.data]);
-                } catch (error) {
-                  console.error("Add Task Error:", error);
+                  setError(null);
+                } catch (err) {
+                  console.error("Add Task Error:", err);
+                  setError("Failed to add task. Please try again.");
                 }
               } else if (modalMode === "edit") {
-                const updatedTask = {
-                  title,
-                  deadline
-                };
+                const updatedTask = { title, deadline };
 
                 try {
                   const res = await axios.put(
@@ -172,10 +185,13 @@ const Tasks = () => {
                       task._id === selectedTask._id ? res.data.data : task
                     )
                   );
-                } catch (error) {
-                  console.error("Edit Task Error:", error);
+                  setError(null);
+                } catch (err) {
+                  console.error("Edit Task Error:", err);
+                  setError("Failed to update task.");
                 }
               }
+
               closeModal();
             }}
           >
@@ -208,6 +224,13 @@ const Tasks = () => {
       </Modal>
 
       {user && <Navbar />}
+
+      {/* 🔔 Error Banner */}
+      {error && (
+        <div className="mx-4 mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
 
       <div className="flex justify-between items-center px-4 py-4">
         <h2 className="text-2xl font-semibold text-gray-800">My Tasks</h2>

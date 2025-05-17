@@ -54,7 +54,7 @@ const Login = () => {
           }`}
           onClick={handleLogin}
         >
-          {loading ? "Logging up..." : "Login"}
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         {error && <div className="text-center text-red-300 mt-4 min-h-[1.5rem]">{error}</div>}
