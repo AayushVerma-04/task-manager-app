@@ -21,12 +21,8 @@ const useLogin = () => {
 
       localStorage.setItem("user", JSON.stringify(resp.data));
       dispatch({ type: "LOGIN", payload: resp.data });
-      // console.log(resp.data);
       setLoading(false);
       nav("/tasks");
-      // setTimeout(() => {
-      //   nav("/books");
-      // }, 100); // Small delay to allow AuthContext to update
 
     } catch (error) {
       setLoading(false);
