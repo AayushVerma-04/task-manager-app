@@ -13,7 +13,7 @@ const Tasks = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [tasks, setTasks] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null); // ✅ error state
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!user || !user.token) return;
@@ -37,7 +37,7 @@ const Tasks = () => {
     fetchTasks();
   }, [user]);
 
-  // Auto-clear error after 5 seconds
+
   useEffect(() => {
     if (error) {
       const timeout = setTimeout(() => setError(null), 5000);
@@ -225,7 +225,6 @@ const Tasks = () => {
 
       {user && <Navbar />}
 
-      {/* 🔔 Error Banner */}
       {error && (
         <div className="mx-4 mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           {error}

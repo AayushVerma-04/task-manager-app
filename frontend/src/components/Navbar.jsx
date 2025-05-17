@@ -3,8 +3,8 @@ import { useLogout } from "../hooks/useLogout";
 import useAuthContext from "../hooks/UseAuthContext";
 
 const Navbar = () => {
-    const { user } = useAuthContext();
-  const {logout} = useLogout();
+  const { user } = useAuthContext();
+  const { logout } = useLogout();
 
   const onLogout = async (e) => {
     e.preventDefault();
