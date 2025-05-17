@@ -1,12 +1,69 @@
-# React + Vite
+# 📝 Task Manager App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack task management application built with the **MERN stack** (MongoDB, Express.js, React, Node.js). This app helps users manage and track their tasks efficiently, with a clean UI and responsive design.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 🔐 User Authentication (Signup & Login using JWT)
+- 📅 Create, Edit, Delete tasks
+- ✅ Mark tasks as complete/incomplete
+- ⏰ Highlight urgent or overdue tasks
+- 🗂 Sort tasks by deadline and completion
+- 📱 Responsive, modern UI with Tailwind CSS
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠️ Tech Stack
+
+| Frontend        | Backend             | Database     | Tools                |
+|-----------------|----------------------|--------------|----------------------|
+| React + Vite + Tailwind | Express.js, Node.js  | MongoDB      | JWT, Axios, Bcrypt |
+
+---
+
+## ⚙️ Project Setup Instructions
+
+### ✅ Prerequisites
+
+- Node.js (v16+)
+- npm or yarn
+- MongoDB (local or Atlas)
+
+---
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/task-manager-app.git
+cd task-manager-app
+```
+
+### 2. Setup backend
+
+```bash
+cd backend
+npm install
+```
+-Create a .env file inside backend
+```bash
+PORT=5555
+MONGODB_URL=your_mongo_db_url
+SECRET=your_jwt_secret
+```
+-Start backend server
+```bash
+npm start
+```
+
+### 3. Setup frontend
+
+```bash
+cd ../frontend
+npm install
+```
+-Fun frontend server
+```bash
+npm run dev
+```
