@@ -26,7 +26,7 @@ const Dashboard = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get("http://localhost:5555/api/tasks/history", {
+        const res = await axios.get("https://task-manager-app-cd7s.onrender.com/api/tasks/history", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         const fetchedTasks = res.data.tasks;
@@ -144,10 +144,10 @@ const Dashboard = () => {
                     </td>
                     <td
                       className={`px-4 py-2 font-medium ${
-                        task.completed ? "text-green-500" : "text-yellow-500"
+                        task.isCompleted ? "text-green-500" : "text-yellow-500"
                       }`}
                     >
-                      {task.completed ? "Completed" : "Pending"}
+                      {task.isCompleted ? "Completed" : "Pending"}
                     </td>
                   </tr>
                 ))}

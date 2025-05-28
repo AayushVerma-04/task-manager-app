@@ -13,7 +13,7 @@ const useLogin = () => {
         try {
             setIsLoading(true);
             setError(null);
-            const result = await axios.post('http://localhost:5555/api/user/login', {email, password})
+            const result = await axios.post('https://task-manager-app-cd7s.onrender.com/api/user/login', {email, password})
 
             localStorage.setItem("user", JSON.stringify(result.data));
             dispatch({type: 'LOGIN', payload: result.data});
