@@ -14,7 +14,7 @@ const useSignup = () => {
       setIsLoading(true);
       setError(null);
 
-      const result = await axios.post('http://localhost:5555/api/user/signup', {
+      const result = await axios.post('https://task-manager-app-cd7s.onrender.com/api/user/signup', {
         username,
         email,
         password,

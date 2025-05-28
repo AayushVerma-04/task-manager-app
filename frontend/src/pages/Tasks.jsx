@@ -23,7 +23,7 @@ const Tasks = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get("http://localhost:5555/api/tasks", {
+        const response = await axios.get("https://task-manager-app-cd7s.onrender.com/api/tasks", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setTasks(response.data);
@@ -75,7 +75,7 @@ const Tasks = () => {
     try {
       setLoading(true);
       const res = await axios.put(
-        `http://localhost:5555/api/tasks/complete/${id}`,
+        `https://task-manager-app-cd7s.onrender.com/api/tasks/complete/${id}`,
         {},
         {
           headers: {
@@ -127,7 +127,7 @@ const Tasks = () => {
                   try {
                     setLoading(true);
                     await axios.delete(
-                      `http://localhost:5555/api/tasks/${selectedTask._id}`,
+                      `https://task-manager-app-cd7s.onrender.com/api/tasks/${selectedTask._id}`,
                       {
                         headers: {
                           Authorization: `Bearer ${user.token}`,
@@ -165,7 +165,7 @@ const Tasks = () => {
                 try {
                   setLoading(true);
                   const res = await axios.post(
-                    "http://localhost:5555/api/tasks",
+                    "https://task-manager-app-cd7s.onrender.com/api/tasks",
                     newTask,
                     {
                       headers: {
@@ -187,7 +187,7 @@ const Tasks = () => {
                 try {
                   setLoading(true)
                   const res = await axios.put(
-                    `http://localhost:5555/api/tasks/${selectedTask._id}`,
+                    `https://task-manager-app-cd7s.onrender.com/api/tasks/${selectedTask._id}`,
                     updatedTask,
                     {
                       headers: {
