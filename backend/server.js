@@ -29,6 +29,16 @@ cron.schedule('0 0 * * *', async () => {
   }
 });
 
+const path = require('path');
+
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Fallback to index.html for SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
+
 mongoose
   .connect(mongodbURL)
   .then(() => {
