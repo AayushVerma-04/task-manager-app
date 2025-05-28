@@ -30,11 +30,16 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-4">
-        {isDashboard &&
+        {isDashboard ?
         <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition" 
         onClick={()=>navigate('/tasks')}>
-          HOME
-        </button>}
+          Tasks
+        </button> :
+        <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition" 
+        onClick={()=>navigate('/user')}>
+          Dashboard
+        </button>
+        }
         <button
           onClick={logout}
           className="px-4 py-1.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium transition"
