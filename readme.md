@@ -16,8 +16,6 @@ A full-stack task management application with user authentication, real-time tas
 
 ---
 
----
-
 ## 🧰 Tech Stack
 
 ### 🚀 Frontend
