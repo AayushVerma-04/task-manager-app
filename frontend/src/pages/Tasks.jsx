@@ -144,6 +144,7 @@ const Tasks = () => {
                     setLoading(false);
                     console.error("Delete Task Error:", err);
                     setError("Failed to delete task.");
+                    closeModal();
                   }
                 }}
                 className="px-4 py-2 text-sm rounded bg-red-500 text-white hover:bg-red-600"
