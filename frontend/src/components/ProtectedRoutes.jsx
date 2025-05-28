@@ -1,14 +1,9 @@
 import { Navigate } from "react-router-dom";
-import useAuthContext from "../hooks/useAuthContext";
-import Spinner from "./Spinner";
+import { useSelector } from "react-redux";
 
 const ProtectedRoute = ({ children }) => {
-  const {user, loading} = useAuthContext();
-  if(loading) {
-    return <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex justify-center items-center z-50">
-          <Spinner />
-        </div>
-  }
+  const user = useSelector((state) => state.auth.user);
+
   return user ? children : <Navigate to="/" />;
 };
 

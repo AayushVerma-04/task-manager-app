@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useLogout from "../hooks/useLogout";
 import useAuthContext from "../hooks/useAuthContext";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const { user } = useAuthContext();
+  const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
   const { logout } = useLogout();
 

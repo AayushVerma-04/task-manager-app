@@ -13,9 +13,11 @@ import Navbar from "../components/Navbar";
 import axios from "axios";
 import useAuthContext from "../hooks/useAuthContext";
 import Spinner from "../components/Spinner";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
-  const { user } = useAuthContext();
+    const user = useSelector((state) => state.auth.user);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [tasks, setTasks] = useState([]);
@@ -40,13 +42,11 @@ const Dashboard = () => {
             ? new Date(task.completedAt).toISOString().split("T")[0]
             : null;
 
-          // Added
           if (!map.has(createdDay)) {
             map.set(createdDay, { day: createdDay, added: 0, completed: 0 });
           }
           map.get(createdDay).added++;
 
-          // Completed
           if (completedDay) {
             if (!map.has(completedDay)) {
               map.set(completedDay, { day: completedDay, added: 0, completed: 0 });
@@ -81,7 +81,6 @@ const Dashboard = () => {
         <h1 className="text-3xl font-bold text-gray-800 dark:text-blue-700">Your dashboard</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Bar Chart */}
           <div className="bg-white shadow rounded-2xl p-4">
             <h2 className="text-xl font-semibold text-gray-700 mb-5">Weekly Stats</h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -97,7 +96,6 @@ const Dashboard = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Stats Box */}
           <div className="bg-white shadow rounded-2xl p-4">
             <h2 className="text-xl font-semibold text-gray-700 mb-5">Your numbers</h2>
             <div className="grid grid-cols-2 gap-6">
@@ -121,7 +119,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Task History Table */}
         <div className="bg-white dark:bg-gray-800 shadow rounded-2xl p-6">
           <h2 className="text-xl font-semibold text-gray-700 dark:text-white mb-4">Task History</h2>
           <div className="overflow-x-auto">
@@ -144,10 +141,10 @@ const Dashboard = () => {
                     </td>
                     <td
                       className={`px-4 py-2 font-medium ${
-                        task.completed ? "text-green-500" : "text-yellow-500"
+                        task.isCompleted ? "text-green-500" : "text-yellow-500"
                       }`}
                     >
-                      {task.completed ? "Completed" : "Pending"}
+                      {task.isCompleted ? "Completed" : "Pending"}
                     </td>
                   </tr>
                 ))}

@@ -2,12 +2,14 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
-import { AuthContextProvider } from "./context/AuthContext.jsx";
+// import { AuthContextProvider } from "./context/AuthContext.jsx";
+import { store } from "./store.jsx";
+import {Provider} from 'react-redux'
 
 createRoot(document.getElementById("root")).render(
-  <AuthContextProvider>
+  <Provider store = {store}>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </AuthContextProvider>
+  </Provider>
 );

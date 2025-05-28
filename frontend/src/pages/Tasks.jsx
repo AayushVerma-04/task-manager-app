@@ -5,9 +5,12 @@ import Modal from "../components/Modal";
 import useAuthContext from "../hooks/useAuthContext";
 import axios from "axios";
 import Spinner from "../components/Spinner"
+import { useSelector } from "react-redux";
 
 const Tasks = () => {
-  const { user } = useAuthContext();
+    const user = useSelector((state) => state.auth.user);
+    console.log(user);
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");

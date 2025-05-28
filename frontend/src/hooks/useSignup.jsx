@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import useAuthContext from './useAuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../features/authSlice';
 
 const useSignup = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { dispatch } = useAuthContext();
   const nav = useNavigate();
+
+  const dispatch = useDispatch();
 
   const signup = async (username, email, password) => {
     try {
@@ -21,7 +23,7 @@ const useSignup = () => {
       });
 
       localStorage.setItem("user", JSON.stringify(result.data));
-      dispatch({ type: 'LOGIN', payload: result.data });
+      dispatch(setUser(result.data));
 
       setIsLoading(false);
       nav('/tasks');
