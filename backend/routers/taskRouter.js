@@ -5,6 +5,8 @@ const {
   updateTask,
   markTaskCompleted,
   deleteById,
+  getAllTasks,
+  getCurrentTasks,
 } = require("../controllers/taskController");
 const requireAuth = require("../middlewares/requireAuth");
 
@@ -12,6 +14,8 @@ const taskRouter = express.Router();
 
 taskRouter.use(requireAuth);
 
+taskRouter.get("/", getCurrentTasks);
+taskRouter.get("/history", getAllTasks);
 taskRouter.post("/", addTask);
 taskRouter.get("/:taskId", getTaskById);
 taskRouter.put("/:taskId", updateTask);
