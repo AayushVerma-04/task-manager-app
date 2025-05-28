@@ -6,6 +6,7 @@ const taskRouter = require("./routers/taskRouter");
 const dotenv = require("dotenv");
 const cron = require("node-cron");
 const Task = require("./Models/taskModel");
+const path = require('path');
 dotenv.config();
 
 const mongodbURL = process.env.mongodbURL;
@@ -27,6 +28,14 @@ cron.schedule('0 0 * * *', async () => {
   } catch (err) {
     console.error('Error deleting old tasks:', err);
   }
+});
+
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Fallback to index.html for SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 mongoose
